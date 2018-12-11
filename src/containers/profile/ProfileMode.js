@@ -42,7 +42,7 @@ export default class ProfileMode extends Component {
     weekModeData: { modes: [], timeRange: [] },
     monthModeData: { modes: [], timeRange: [] },
     yearModeData: { modes: [], timeRange: [] },
-     || 0: 0,
+
     totalDay: 0,
     emotions: [],
     pieData: [],
@@ -99,7 +99,7 @@ export default class ProfileMode extends Component {
     const yearData = mergeData.length >= 365 ? mergeData.slice(-365) : mergeData
 
     this.setState({
-       || 0: (totalMode / myDiaryList.length).toFixed(2),
+    
       totalDay: mergeData.length,
       emotions,
       pieData: [posDays, midDays, negDays],
