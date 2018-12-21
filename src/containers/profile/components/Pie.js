@@ -17,7 +17,8 @@ export default class Pie extends Component {
 
 	static propTypes = {
 		data: PropTypes.arrayOf(PropTypes.number).isRequired,
-		height: PropTypes.number
+		height: PropTypes.number,
+		animEnabled:PropTypes.boolean
 	}
 
 	render() {
@@ -46,6 +47,7 @@ export default class Pie extends Component {
 			},
 			// backgroundColor: 'red',
 			color: ['#2DC3A6', '#FAA755', '#F54E4E'],
+			animation:this.props.animEnabled,
 			series: [
 				{
 					name: '日记情绪',

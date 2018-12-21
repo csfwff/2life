@@ -17,7 +17,8 @@ export default class Radar extends Component {
 	static propTypes = {
 		data: PropTypes.arrayOf(PropTypes.number).isRequired,
 		isTest: PropTypes.bool,
-		height: PropTypes.number
+		height: PropTypes.number,
+		animEnabled:PropTypes.boolean
 	}
 
 	render() {
@@ -38,6 +39,7 @@ export default class Radar extends Component {
 					{ name: this.props.isTest ? '神经质' : '愤怒', max }
 				]
 			},
+			animation:this.props.animEnabled,
 			series: [{
 				name: '测试结果',
 				type: 'radar',

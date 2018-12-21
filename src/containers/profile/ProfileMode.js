@@ -429,8 +429,8 @@ export default class ProfileMode extends Component {
           {this.renderSpinner()}
         </Modal>
 
-        <ScrollView contentContainerStyle={styles.scroll_container}>
-          <ViewShot ref='viewShot' options={{ format: 'jpg', quality: 1 }}>
+        <ScrollView contentContainerStyle={styles.scroll_container} style={styles.scroll_container} >
+          <ViewShot ref='viewShot' options={{ format: 'jpg', quality: 1 }} style={styles.scroll_container}>
             <View
               style={[styles.report_banner, { display: this.props.user.emotions_basis && this.state.isShareModal ? 'flex' : 'none' }]}>
               <Image source={require('../../../res/images/common/report_banner.png')}
@@ -470,11 +470,13 @@ export default class ProfileMode extends Component {
             </View>
 
             <View style={styles.pie_container}>
-              <Pie data={this.state.pieData} height={getResponsiveWidth(180)}/>
+              <Pie data={this.state.pieData} height={getResponsiveWidth(180)}
+                animEnabled={this.props.user.emotions_basis && this.state.isShareModal ? false : true}/>
             </View>
 
             <View style={[styles.radar_container, { display: this.props.user.emotions_basis ? 'flex' : 'none' }]}>
-              <Radar data={this.state.emotions} height={getResponsiveWidth(220)}/>
+              <Radar data={this.state.emotions} height={getResponsiveWidth(220)}
+                animEnabled={this.props.user.emotions_basis && this.state.isShareModal ? false : true}/>
             </View>
 
             <View
@@ -556,6 +558,7 @@ const styles = StyleSheet.create({
     }),
   },
   scroll_container: {
+    backgroundColor:'#fff',
     // marginLeft: getResponsiveWidth(24),
     // marginRight: getResponsiveWidth(24)
   },
@@ -687,7 +690,7 @@ const styles = StyleSheet.create({
   },
   report_extension: {
     width: WIDTH,
-    height: getResponsiveHeight(78),
+    height: getResponsiveHeight(90),
     flexDirection: 'row',
     backgroundColor: '#fff',
     marginBottom: getResponsiveHeight(35)
