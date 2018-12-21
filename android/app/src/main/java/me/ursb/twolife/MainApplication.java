@@ -4,6 +4,8 @@ import android.app.Application;
 
 
 import com.facebook.react.ReactApplication;
+import com.rnfs.RNFSPackage;
+import fr.greweb.reactnativeviewshot.RNViewShotPackage;
 import com.rnfingerprint.FingerprintAuthPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -39,6 +41,8 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(new MainReactPackage(),
+            new RNFSPackage(),
+            new RNViewShotPackage(),
             new FingerprintAuthPackage(),
             new LinearGradientPackage(),
             //new ExtraDimensionsPackage(),
