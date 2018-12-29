@@ -34,6 +34,7 @@ import ProfileSetting from './containers/profile/ProfileSetting'
 import ProfileThanks from './containers/profile/ProfileThanks'
 import ProfilePrivacy from './containers/profile/ProfilePrivacy'
 import ProfileVip from './containers/profile/ProfileVip'
+import ProfileVersion from './containers/profile/ProfileVersion'
 import Notification from './containers/notification/Notification'
 
 import { Scene, Router, ActionConst } from 'react-native-router-flux'
@@ -243,6 +244,13 @@ export default class AppRouter extends Component {
               duration={0}
             />
             <Scene
+              key={scenes.SCENE_PROFILE_VERSION}
+              component={ProfileVersion}
+              title='关于双生'
+              hideNavBar
+              duration={0}
+            />
+            <Scene
               key={scenes.SCENE_PROFILE_VIP}
               component={ProfileVip}
               title='高级会员'
@@ -252,7 +260,7 @@ export default class AppRouter extends Component {
             <Scene
               key={scenes.SCENE_PROFILE_NOTIFICATION}
               component={Notification}
-              title='高级会员'
+              title='通知'
               hideNavBar
               duration={0}
             />
