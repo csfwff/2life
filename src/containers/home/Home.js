@@ -299,6 +299,7 @@ export default class Home extends Component {
         showWeatherTip: false,
       })
     } else {
+
       this.setState({
         showWeatherFlag: true
       })
