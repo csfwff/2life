@@ -202,7 +202,7 @@ export default class Profile extends Component {
 
     let NotificationRow
     if (this.state.unread !== 0) {
-      NotificationRow = 
+      NotificationRow =
       <Row
         imageLeft={<Image source={require('../../../res/images/profile/icon_profile_notification.png')} />}
         title='通知'
@@ -329,7 +329,7 @@ export default class Profile extends Component {
               />
             </View> */}
 
-            
+
             {
               NotificationRow
             }
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
     paddingLeft: getResponsiveWidth(70),
     ...ifIphoneX({
       paddingTop: getResponsiveHeight(4),
-    }, 
+    },
     {
       paddingTop: getResponsiveHeight(28),
     }),
@@ -415,7 +415,7 @@ const styles = StyleSheet.create({
     right: getResponsiveWidth(32),
     ...ifIphoneX({
       bottom: getResponsiveWidth(120),
-    }, 
+    },
     {
       bottom: getResponsiveWidth(80),
     }),
@@ -437,7 +437,7 @@ const styles = StyleSheet.create({
     paddingRight: getResponsiveWidth(24),
     ...ifIphoneX({
       paddingBottom: 84,
-    }, 
+    },
     {
       paddingBottom: 50,
     }),

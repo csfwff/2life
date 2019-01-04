@@ -5559,6 +5559,10 @@ react-native-splash-screen@^3.0.0:
   version "3.0.6"
   resolved "http://registry.npm.taobao.org/react-native-splash-screen/download/react-native-splash-screen-3.0.6.tgz#c0bbf2c8ae40a313c4c7044f55e569414ff68332"
 
+react-native-store-review@^0.1.5:
+  version "0.1.5"
+  resolved "http://registry.npm.taobao.org/react-native-store-review/download/react-native-store-review-0.1.5.tgz#9df69786a137580748e368641698d2104519e4cf"
+
 react-native-svg-charts@^5.0.0:
   version "5.0.0"
   resolved "http://registry.npm.taobao.org/react-native-svg-charts/download/react-native-svg-charts-5.0.0.tgz#bab44a259186c354d3a54cc5963003f1a71d183b"

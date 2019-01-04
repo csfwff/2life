@@ -179,6 +179,7 @@ export default class Index extends Component {
     }
   }
 
+
   render() {
     return (
       <View style={styles.tabs_container}>

@@ -293,6 +293,7 @@ export default class ProfileMode extends Component {
   }
 
   handleCanvas = (canvas) => {
+    if(canvas === null) return;
     const ctx = canvas.getContext('2d')
 
     ctx.beginPath()
