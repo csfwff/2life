@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import {
   StyleSheet,
   TouchableOpacity,
-  Image
+  Image,
+  PermissionsAndroid,
+  Platform
 } from 'react-native'
 
 import { ifIphoneX } from 'react-native-iphone-x-helper'
@@ -10,7 +12,7 @@ import Swiper from 'react-native-swiper'
 import ImagePicker from 'react-native-image-picker'
 
 import { View } from 'react-native-animatable'
-
+import { Toast } from 'antd-mobile'
 import CommonNav from '../../components/CommonNav'
 
 import {
@@ -37,6 +39,27 @@ export default class DiaryBanner extends Component {
     })
     this._setImgList()
   }
+
+
+  async _checkPermission(){
+    try {
+      const results = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+      ])
+      if(results[PermissionsAndroid.PERMISSIONS.CAMERA] === PermissionsAndroid.RESULTS.GRANTED &&
+        results[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] === PermissionsAndroid.RESULTS.GRANTED &&
+        results[PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE] === PermissionsAndroid.RESULTS.GRANTED){
+          this._addImg()
+        } else {
+          Toast.info('双生需要获取权限才能添加图片哦', 2)
+        }
+    } catch (err) {
+      Toast.info('双生获取权限失败了T_T', 2)
+    }
+  }
+
 
   async _addImg() {
     const options = {
@@ -149,7 +172,13 @@ export default class DiaryBanner extends Component {
           <TouchableOpacity style={styles.icon_container} onPress={() => this._removeImg()}>
             <Image source={require('../../../res/images/home/icon_remove_photo.png')}/>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this._addImg()}>
+          <TouchableOpacity onPress={() =>{
+            if (Platform.OS == 'ios'){
+              this._addImg()
+            }else {
+              this._checkPermission()
+            }
+            }}>
             <Image source={require('../../../res/images/home/icon_add_photo2.png')}/>
           </TouchableOpacity>
         </View>

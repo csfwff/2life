@@ -10,6 +10,7 @@ import {
   DatePickerIOS,
   Animated,
   Platform,
+  PermissionsAndroid
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -195,6 +196,30 @@ export default class NewDiary extends Component {
     this._renderRightButton()
   }
 
+
+  async _checkPermission(){
+    if( Platform.OS === 'ios' ){
+      this._callImgPicker()
+    } else {
+      try {
+        const results = await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+        ])
+        if(results[PermissionsAndroid.PERMISSIONS.CAMERA] === PermissionsAndroid.RESULTS.GRANTED &&
+          results[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] === PermissionsAndroid.RESULTS.GRANTED &&
+          results[PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE] === PermissionsAndroid.RESULTS.GRANTED){
+            this._callImgPicker()
+          } else {
+            Toast.info('双生需要获取权限才能识别文字哦', 2)
+          }
+      } catch (err) {
+        Toast.info('双生获取权限失败了T_T', 2)
+      }
+    }
+  }
+
   _callImgPicker() {
     const options = {
       title: '手写日记识别',
@@ -265,7 +290,7 @@ export default class NewDiary extends Component {
       require('../../../res/images/home/diary/icon_ocr_black.png')
 
     const rightButton = (
-      <TouchableOpacity onPress={this._callImgPicker.bind(this)}>
+      <TouchableOpacity onPress={this._checkPermission.bind(this)}>
         <Image source={source}/>
       </TouchableOpacity>
     )

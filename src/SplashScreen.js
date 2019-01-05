@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { View, PermissionsAndroid } from 'react-native'
 import { connect } from 'react-redux'
 import Toast from 'antd-mobile/lib/toast'
 import * as WeChat from 'react-native-wechat'
@@ -31,6 +31,7 @@ class SplashScreen extends Component {
 
     WeChat.registerApp('wxbf371b0ab61d3873')
     this._autoLogin()
+    this._requestPermissions()
   }
 
   async _autoLogin() {
@@ -71,6 +72,26 @@ class SplashScreen extends Component {
 
     RNSplashScreen.hide()
   }
+
+  async _requestPermissions(){
+    try {
+      const granted = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+      ])
+      console.log(granted);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+
+
+
+
 
   render() {
     return <View />

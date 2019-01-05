@@ -7,7 +7,8 @@ import {
   Image,
   Platform,
   TextInput,
-  Alert
+  Alert,
+  PermissionsAndroid
 } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { Toast } from 'antd-mobile'
@@ -40,6 +41,25 @@ export default class ProfileEdit extends Component {
 
   componentDidMount() {
     this.setState({ user: this.props.user, name: this.props.user.name })
+  }
+
+  async _checkPermission(){
+    try {
+      const results = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+      ])
+      if(results[PermissionsAndroid.PERMISSIONS.CAMERA] === PermissionsAndroid.RESULTS.GRANTED &&
+        results[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] === PermissionsAndroid.RESULTS.GRANTED &&
+        results[PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE] === PermissionsAndroid.RESULTS.GRANTED){
+          this.seleceFace()
+        } else {
+          Toast.info('双生需要获取权限才能添加图片哦', 2)
+        }
+    } catch (err) {
+      Toast.info('双生获取权限失败了T_T', 2)
+    }
   }
 
   async seleceFace() {
@@ -120,7 +140,13 @@ export default class ProfileEdit extends Component {
           <ScrollView scrollEnabled={true} contentContainerStyle={styles.main_container}>
             <TouchableOpacity
               style={styles.row}
-              onPress={() => this.seleceFace()}
+              onPress={() => {
+                if ( Platform.OS === 'ios' ){
+                  this.seleceFace()
+                }else{
+                  this._checkPermission()
+                }
+              }}
             >
               <TextPingFang style={styles.text_row_left}>头像</TextPingFang>
               <Image style={styles.row_face} source={{ uri: this.state.user.face }} />

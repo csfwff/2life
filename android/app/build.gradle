@@ -88,13 +88,13 @@ def releaseTime() {
 
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 26
     buildToolsVersion "24.0.1"
 
     defaultConfig {
         applicationId "me.ursb.twolife"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 26
         versionCode 17
         versionName "2.1.11"
         manifestPlaceholders = [
