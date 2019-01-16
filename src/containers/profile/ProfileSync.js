@@ -82,7 +82,7 @@ export default class ProfileSync extends Component {
           store.dispatch(fetchProfileSuccess(res.data.user))
           DeviceEventEmitter.emit('flush_note', {})
         }
-  
+
         store.dispatch(cleanPartner())
       }
     } else {
