@@ -7,7 +7,8 @@ import {
   Image,
   View,
   ScrollView,
-  Modal
+  Modal,
+  DeviceEventEmitter
 } from 'react-native'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { Actions } from '../../../node_modules/react-native-router-flux'
@@ -24,6 +25,8 @@ import TabBar from './components/TabBar'
 import ModeCharts from './components/ModeCharts'
 import Pie from './components/Pie'
 import Radar from './components/Radar'
+
+import CalendarHeatmap from '../../components/react-native-calendar-heatmap'
 
 import {
   getResponsiveWidth,
@@ -62,10 +65,30 @@ export default class ProfileMode extends Component {
     reportList: [],
     characterImg: null,
     isWXAppInstalled: false,
-    isShareModal: false
+    isShareModal: false,
+    calendarHeatMapValue: [],
+    numDays: 180
   }
 
   async componentWillMount() {
+    this._computeModeData()
+  }
+
+  async componentDidMount() {
+
+    DeviceEventEmitter.addListener('flush_mode_data', async () => {
+      this._computeModeData()
+    })
+
+    WeChat.isWXAppInstalled().then(isWXAppInstalled => this.setState({ isWXAppInstalled }))
+    // ios 10.3 or later
+    if (this.props.user.emotions_basis && StoreReview.isAvailable && await Storage.get('isRate', false)) {
+      StoreReview.requestReview()
+      await Storage.set('isRate', true)
+    }
+  }
+
+  async _computeModeData() {
     let user = this.props.user
 
     const res = await HttpUtils.get(UTILS.update_emotion_report)
@@ -90,23 +113,36 @@ export default class ProfileMode extends Component {
 
     this.setCharacterImg(user.emotions_type)
 
-
     // 获得我的所有日记情绪值
     const diaryList = await readFile(user.id)
     let myDiaryList = diaryList.filter(diary => diary.user_id === user.id)
     myDiaryList.sort((a, b) => a.date - b.date)
 
     let modeData = [], totalMode = 0, posDays = 0, midDays = 0, negDays = 0
+    let calendarHeatMapValue = []
+    let startTime = Date.now() // 开始写日记的时间戳
     for (let diary of myDiaryList) {
       modeData.push({
         [diary.date]: diary.mode
       })
+      startTime = startTime < diary.date ? startTime: diary.date
+
+      let heatmapValue = {
+        date: diary.date,
+        count: Math.floor(diary.mode / 33.34) + 1
+      }
 
       totalMode += diary.mode
       diary.mode <= 33.33 ? negDays++ : null
       33.33 < diary.mode && diary.mode <= 66.66 ? midDays++ : null
       66.66 < diary.mode && diary.mode <= 100 ? posDays++ : null
+      calendarHeatMapValue.push(heatmapValue)
     }
+
+    // 单独 setState 是为了保证情绪格子的数目能先于数据确定下来，避免渲染错误
+    this.setState({
+      numDays: Math.ceil((Date.now() - startTime) / (24 * 60 * 60 * 1000)) < 240 ? 240 : Math.ceil((Date.now() - startTime) / (24 * 60 * 60 * 1000)),
+    })
 
     const mergeData = this.mergeData(modeData)
     const weekData = mergeData.length >= 7 ? mergeData.slice(-7) : mergeData
@@ -123,16 +159,8 @@ export default class ProfileMode extends Component {
       monthModeData: this.formData(monthData, 'month'),
       yearModeData: this.formData(yearData, 'year'),
       totalModeData: this.formData(modeData, 'total'),
+      calendarHeatMapValue
     })
-  }
-
-  async componentDidMount() {
-    WeChat.isWXAppInstalled().then(isWXAppInstalled => this.setState({ isWXAppInstalled }))
-    // ios 10.3 or later
-    if (this.props.user.emotions_basis && StoreReview.isAvailable && await Storage.get('isRate', false)) {
-      StoreReview.requestReview()
-      await Storage.set('isRate', true)
-    }
   }
 
   // 将情绪值按日期分类，相同天数的日记取情绪平均值
@@ -445,7 +473,7 @@ export default class ProfileMode extends Component {
               <Image source={require('../../../res/images/common/report_banner.png')}
               />
             </View>
-            <ScrollableTabView
+            {/* <ScrollableTabView
               style={styles.chart_height}
               renderTabBar={() => <TabBar tabNames={['一周', '一月', '一年', '全部']}/>}
             >
@@ -465,8 +493,15 @@ export default class ProfileMode extends Component {
                 modeData={this.state.totalModeData.modes}
                 timeRange={this.state.totalModeData.timeRange}
               />
-            </ScrollableTabView>
+            </ScrollableTabView> */}
 
+            <View style={styles.heatmap_container}>
+              <CalendarHeatmap
+                numDays={this.state.numDays}
+                gutterSize={1}
+                values={this.state.calendarHeatMapValue}
+              />
+            </View>
             <View style={styles.total_container}>
               <View style={styles.total_inner_container}>
                 <TextPingFang style={styles.text_top}>{this.state.totalDay}</TextPingFang>
@@ -576,6 +611,13 @@ const styles = StyleSheet.create({
     marginRight: getResponsiveWidth(24),
     height: getResponsiveWidth(300)
   },
+  heatmap_container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 0.04 * WIDTH,
+    marginRight: 0.04 * WIDTH,
+    marginTop: getResponsiveWidth(24)
+  },
   total_container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -607,7 +649,7 @@ const styles = StyleSheet.create({
     marginTop: getResponsiveHeight(56),
     marginLeft: getResponsiveWidth(24),
     marginRight: getResponsiveWidth(24),
-    marginBottom: getResponsiveHeight(56)
+    marginBottom: getResponsiveHeight(48)
   },
   text_type: {
     color: '#333',

@@ -12,11 +12,15 @@
 
 双生日记2.0 鼓励用户书写和记录自己的心情，通过自研的 NLP 多维情感分析算法结合自研大五人格量表分析出用户的情绪状态，并配合专业的心理学知识，生成可视化情绪周期图表，为用户生成定制化的、科学的情绪管理方案。
 
-宣传视频：[https://www.bilibili.com/video/av26702790](https://www.bilibili.com/video/av26702790)
-
-* App Store 下载地址：搜索“双生日记”即可
-* Google Play 下载地址：[https://play.google.com/store/apps/details?id=me.ursb.twolife](https://play.google.com/store/apps/details?id=me.ursb.twolife)
-* Android 国内下载地址（酷安）：[https://www.coolapk.com/apk/214311](https://www.coolapk.com/apk/214311)
+* 宣传视频：[https://www.bilibili.com/video/av26702790](https://www.bilibili.com/video/av26702790)
+* 文章报导：[走近「双生小日记」，跨国团队，中文探索，让纯粹的日记更治愈](https://mp.weixin.qq.com/s?__biz=MzU2OTUwNDQ5NA==&mid=2247484106&idx=1&sn=01c8f49423e4cf756952ad87f4af2734&chksm=fcfce54bcb8b6c5dae6b27186f4e34a66ba48bf030be680371afc7230385575de6785e76ce97&mpshare=1&scene=1&srcid=091353sMF9mesvG0R0e8DL8n%23rd)
+* App Store 下载地址：[https://itunes.apple.com/cn/app/id1245100877](https://itunes.apple.com/cn/app/id1245100877)
+* Android 版下载地址：
+    * [Google Play](https://play.google.com/store/apps/details?id=me.ursb.twolife)
+    * [PP 助手](http://m.pp.cn/detail.html?appid=7925788&ch_src=pp_dev&ch=default)
+    * [豌豆荚](https://www.wandoujia.com/apps/me.ursb.twolife)
+    * [酷安](https://www.coolapk.com/apk/214311)
+    * [蒲公英](https://www.pgyer.com/2life)
 * 微信小程序：搜索“双生小日记”即可
 * 前端 GitHub 地址：[https://github.com/oh-bear/2life](https://github.com/oh-bear/2life)
 * 后端 GitHub 地址：[https://github.com/airingursb/2life-server](https://github.com/airingursb/2life-server)
@@ -37,6 +41,25 @@
 
 
 ## 2.x
+
+### 2.1.13 / 2019-01-13
+
+- 优化了情绪格子，支持滑动浏览，可以看到自己全部的心情历史
+- 修复了情绪值为100时，情绪格子的颜色显示问题
+- 修复了情绪报告不及时更新的问题
+
+如果您喜欢双生日记，请考虑在 App Store 留一个评价，这对开发者来说很重要。非常感谢。
+
+### 2.1.12 / 2019-01-11
+
+- 新增了情绪格子，更友善的可视化自己的情绪历史
+- 暂时取消了情绪曲线，等待后期优化
+- 开放了对美区账户的注册支持
+- 修复了用户码可能重复的问题
+- 修复了编辑日记时可能重复保存的问题
+- 修复了微信登录失败时产生空账号的问题
+
+如果您喜欢双生日记，请考虑在 App Store 留一个评价，这对开发者来说很重要。非常感谢。
 
 ### 2.1.11 / 2019-01-01
 

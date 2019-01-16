@@ -10,6 +10,7 @@ import {
   DatePickerIOS,
   Animated,
   Platform,
+  DeviceEventEmitter,
   PermissionsAndroid
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
@@ -178,6 +179,8 @@ export default class NewDiary extends Component {
 
       // 同步
       isLogin && await syncFile(this.props.user.id)
+
+      DeviceEventEmitter.emit('flush_mode_data')
 
       if (this.state.firstEntryDiary) {
         this.setState({
