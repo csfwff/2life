@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import {
-  View,
   StyleSheet,
+  View,
+  Keyboard
 } from 'react-native'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import PropTypes from 'prop-types'
@@ -16,7 +17,8 @@ import {
 export default class Container extends Component {
   static propTypes = {
     hidePadding: PropTypes.bool,
-    showNetStatus: PropTypes.bool
+    showNetStatus: PropTypes.bool,
+    style: PropTypes.any
   }
 
   render() {
@@ -28,7 +30,8 @@ export default class Container extends Component {
           styles.container,
           {
             paddingTop: this.props.hidePadding ? 0 : padding_top
-          }
+          },
+          this.props.style
         ]}
       >
         <NetStatus showNetStatus={this.props.showNetStatus}/>

@@ -11,25 +11,26 @@ import {
   Modal,
   Animated,
   TextInput,
-  Keyboard
 } from 'react-native'
-import { ActionSheet } from 'antd-mobile';
+import { ActionSheet } from 'antd-mobile'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ImageViewer from 'react-native-image-zoom-viewer'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
 import CommonNav from '../../components/CommonNav'
+import KeyboardStickeyBar from '../../components/KeyboardStickeyBar'
+import CommentList from '../../components/CommentList'
 import DiaryBanner from './DiaryBanner'
 
 import {
   WIDTH,
   getResponsiveWidth,
 } from '../../common/styles'
-import { getMonth, updateFile, syncFile, getPath } from '../../common/util'
+import { formatDate, updateFile, syncFile, getPath } from '../../common/util'
 import { SCENE_UPDATE_DIARY } from '../../constants/scene'
 
 import HttpUtils from '../../network/HttpUtils'
@@ -53,12 +54,16 @@ export default class DiaryDetail extends Component {
     mode_face: require('../../../res/images/home/icon_happy.png'),
     showChangeMode: false,
     showImgPreview: false,
+    hideCommentInput: true,
     modeWidth: new Animated.Value(0),
     modeOpacity: new Animated.Value(0),
     leftButton: null,
     rightButton: null,
-    inputCommentY: new Animated.Value(0),
-    showKeyboard: false
+    commentContent: '',
+    commentContent_2: '',
+    commentList: [],
+    inputCommentPlaceholder: '写下想对Ta说的吧～',
+    currentReplyComment: {}, // 当前正在回复的评论
   }
 
   async componentWillMount() {
@@ -88,7 +93,10 @@ export default class DiaryDetail extends Component {
     this.setState({ mode: diary.mode ? diary.mode : 0 })
 
     this.renderlikeComponent(diary.is_liked)
-    this.setKeyboard()
+  }
+
+  componentDidMount() {
+    this.getComment()
   }
 
   async updateMode(mode, mode_face) {
@@ -263,28 +271,54 @@ export default class DiaryDetail extends Component {
     ]).start()
   }
 
-  setKeyboard() {
-    Keyboard.addListener('keyboardWillShow', event => {
-      this.setState({ showKeyboard: true })
-      this.toggleInputComment(true, event)
-    })
-    Keyboard.addListener('keyboardWillHide', event => {
-      this.setState({ showKeyboard: false })
-      this.toggleInputComment(false, event)
-    })
+  keyboardWillShow = () => {
+    this.inputComment.focus()
+    this.setState({ hideCommentInput: false })
+  }
+  keyboardWillHide = () => {
+    this.inputComment.blur()
+    this.setState({ hideCommentInput: true })
   }
 
-  toggleInputComment(showKeyboard, event) {
-    Animated.timing(
-      this.state.inputCommentY,
-      {
-        toValue: showKeyboard ? event.endCoordinates.height : 0,
-        duration: showKeyboard ? event.duration : event.duration
-      }
-    ).start()
+  getComment  = async () => {
+    const params = {
+      note_id: this.props.diary.id,
+      owner_id: this.props.diary.user_id
+    }
+    const res = await HttpUtils.get(NOTES.show_comment, params)
+    this.setState({ commentList: res.comments })
   }
 
-  sendComment() {
+  addComment = async () => {
+    const data = {
+      note_id: this.props.diary.id,
+      user_id: this.props.user.id,
+      owner_id: this.props.diary.user_id,
+      content: this.state.commentContent,
+    }
+    const res = await HttpUtils.post(NOTES.add_comment, data)
+    if (res.code === 0) {
+      this.keyboardWillHide()
+      this.setState({ commentContent: '', commentContent_2: '', currentReplyComment: {} })
+      this.getComment()
+    }
+  }
+
+  replyComment = async () => {
+    const comment = this.state.currentReplyComment
+    this.setState({ inputCommentPlaceholder: '回复 ' + comment.reply.name })
+    const data = {
+      note_id: this.props.diary.id,
+      user_id: comment.user.id,
+      owner_id: this.props.diary.user_id,
+      content: this.state.commentContent,
+    }
+    const res = await HttpUtils.post(NOTES.add_comment, data)
+    if (res.code === 0) {
+      this.keyboardWillHide()
+      this.setState({ commentContent: '', commentContent_2: '', currentReplyComment: {} })
+      this.getComment()
+    }
   }
 
   _renderLeftButton() {
@@ -328,7 +362,10 @@ export default class DiaryDetail extends Component {
 
   render() {
     return (
-      <Container hidePadding={this.state.showBanner}>
+      <Container
+        style={styles.container}
+        hidePadding={this.state.showBanner}
+      >
         <KeyboardAwareScrollView>
           <DiaryBanner
             showNav={true}
@@ -353,10 +390,7 @@ export default class DiaryDetail extends Component {
           />
 
           <View style={styles.date_container}>
-            <TextPingFang
-              style={styles.text_date}>{getMonth(new Date(this.props.diary.date).getMonth())} </TextPingFang>
-            <TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getDate()}，</TextPingFang>
-            <TextPingFang style={styles.text_date}>{new Date(this.props.diary.date).getFullYear()}</TextPingFang>
+            <TextPingFang style={styles.text_date}>{formatDate(this.props.diary.date, 'Z月 dd, yyyy')}</TextPingFang>
           </View>
 
           <TextPingFang style={styles.text_title}>{this.props.diary.title}</TextPingFang>
@@ -431,26 +465,22 @@ export default class DiaryDetail extends Component {
             </Animated.View>
           </View>
 
-          {/* <TouchableOpacity
+          <TouchableOpacity
             style={[styles.mode_container, {display: this.props.diary.user_id === this.props.user.user_other_id ? 'flex' : 'none'}]}
             activeOpacity={1}
-            onPress={() => {
-              setTimeout(() => this.inputComment.focus(), 250)
-              this.inputMask.focus()
-            }}
+            onPress={this.keyboardWillShow}
           >
             <Image style={styles.location_icon} source={require('../../../res/images/home/diary/icon_comment.png')} />
             <TextPingFang style={styles.text_comment}>有什么想说的</TextPingFang>
           </TouchableOpacity>
 
-          <View style={styles.comment_container}>
-            <TextPingFang style={styles.text_comment_top}>日记评论</TextPingFang>
-          </View>
-
-          <TextInput
-            ref={ref => this.inputMask = ref}
-            style={styles.input_mask}
-          /> */}
+          <CommentList
+            data={this.state.commentList}
+            onPressItem={(comment) => {
+              this.setState({currentReplyComment: comment})
+              this.keyboardWillShow()
+            }}
+          />
 
         </KeyboardAwareScrollView>
 
@@ -476,34 +506,39 @@ export default class DiaryDetail extends Component {
           {this.state.likeComponent}
         </TouchableOpacity>
 
-        <Animated.View
-          style={[
-            styles.input_container,
-            {
-              position: this.state.showKeyboard ? 'absolute' : 'relative',
-              bottom: this.state.inputCommentY,
-              display: this.state.showKeyboard ? 'flex' : 'none'
-            }
-          ]}
+        <KeyboardStickeyBar
+          hide={this.state.hideCommentInput}
+          ctnStyle={styles.input_container}
+          keyboardWillHide={this.keyboardWillHide}
         >
           <TextInput
             ref={ref => this.inputComment = ref}
             style={styles.input_comment}
-            placeholder='写下想对Ta说的吧～'
+            value={this.state.commentContent}
+            onChangeText={text => this.setState({ commentContent_2: text })}
+            placeholder={this.state.inputCommentPlaceholder}
             placeholderTextColor='#aaa'
             enablesReturnKeyAutomatically={true}
             multiline={true}
             underlineColorAndroid='transparent'
             returnKeyType={'send'}
-            onSubmitEditing={() => this.sendComment()}
+            onSubmitEditing={() => {
+              this.setState({ commentContent: this.state.commentContent_2 }, () => {
+                this.state.currentReplyComment.id ? this.replyComment() : this.addComment()
+              })
+            }}
           />
-        </Animated.View>
+        </KeyboardStickeyBar>
+
       </Container>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: 'flex-start',
+  },
   nav_right: {
     justifyContent: 'center',
     height: getResponsiveWidth(30)
@@ -632,37 +667,19 @@ const styles = StyleSheet.create({
   },
   input_container: {
     width: WIDTH,
-    paddingLeft: getResponsiveWidth(8),
-    paddingRight: getResponsiveWidth(8),
-    paddingTop: getResponsiveWidth(8),
-    paddingBottom: getResponsiveWidth(8),
+    paddingVertical: getResponsiveWidth(8),
+    paddingHorizontal: getResponsiveWidth(8),
     backgroundColor: '#f3f3f3'
   },
   input_comment: {
-    minHeight: getResponsiveWidth(24),
+    minHeight: getResponsiveWidth(30),
     maxHeight: getResponsiveWidth(80),
-    paddingTop: getResponsiveWidth(6),
-    paddingBottom: getResponsiveWidth(6),
-    paddingLeft: getResponsiveWidth(12),
-    paddingRight: getResponsiveWidth(12),
+    paddingVertical: getResponsiveWidth(8),
+    paddingHorizontal: getResponsiveWidth(12),
+    textAlignVertical: 'center',
     color: '#444',
     fontSize: 14,
     borderRadius: 8,
     backgroundColor: '#fff'
   },
-  comment_container: {
-    marginTop: getResponsiveWidth(24),
-    paddingLeft: getResponsiveWidth(24),
-    paddingRight: getResponsiveWidth(24),
-  },
-  text_comment_top: {
-    color: '#444',
-    fontSize: 14,
-    fontWeight: 'bold'
-  },
-  input_mask: {
-    position: 'absolute',
-    bottom: 0,
-    height: 0
-  }
 })
