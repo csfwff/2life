@@ -18,6 +18,7 @@ import { Actions } from 'react-native-router-flux'
 import ImageViewer from 'react-native-image-zoom-viewer'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Toast from 'antd-mobile/lib/toast'
 
 import Container from '../../components/Container'
 import TextPingFang from '../../components/TextPingFang'
@@ -67,22 +68,34 @@ export default class DiaryDetail extends Component {
   }
 
   async componentWillMount() {
-    const diary = this.props.diary
+    const { diary, from } = this.props
 
-    if (diary.imgPathList.length) {
+    if (diary.imgPathList) {
       this.setState({
-        imgPathList: diary.imgPathList,
-        showBanner: true
+        imgPathList: diary.imgPathList.map(path => getPath(path)),
+        showBanner: !!diary.imgPathList.length
       }, () => {
         this._renderLeftButton()
         this._renderRightButton()
       })
-    } else {
-      this.setState({ showBanner: false }, () => {
+    } 
+
+    if (from === 'hole') {
+      this.setState({
+        imgPathList: diary.images.split(','),
+        showBanner: !!diary.images
+      }, () => {
         this._renderLeftButton()
-        this._renderRightButton()
+        this._renderHoleRightButton()
       })
     }
+
+    this.renderlikeComponent(diary.is_liked)
+  }
+
+  componentDidMount() {
+
+    const { diary } = this.props
 
     if (diary.mode >= 0 && diary.mode <= 20) this.setState({ mode_face: require('../../../res/images/home/icon_very_sad_male.png') })
     if (diary.mode > 20 && diary.mode <= 40) this.setState({ mode_face: require('../../../res/images/home/icon_sad_male.png') })
@@ -92,10 +105,6 @@ export default class DiaryDetail extends Component {
 
     this.setState({ mode: diary.mode ? diary.mode : 0 })
 
-    this.renderlikeComponent(diary.is_liked)
-  }
-
-  componentDidMount() {
     this.getComment()
   }
 
@@ -165,52 +174,65 @@ export default class DiaryDetail extends Component {
     })
   }
 
+  showHoleOptions() {
+    const options = {
+      options: ['举报该不适当内容', '取消'],
+      cancelButtonIndex: 1,
+    }
+    ActionSheetIOS.showActionSheetWithOptions(options, index => {
+      if (index === 0) {
+        HttpUtils.get(NOTES.report_hole, { note_id: this.props.diary.id })
+        Toast.info('将会对内容进行核查，感谢您的反馈', 1.5)
+      }
+    })
+  }
+
   showActionSheet() {
-    const BUTTONS = ['修改日记', '删除日记', '取消'];
+    const BUTTONS = ['修改日记', '删除日记', '取消']
     ActionSheet.showActionSheetWithOptions({
       options: BUTTONS,
       cancelButtonIndex: BUTTONS.length - 1,
       destructiveButtonIndex: BUTTONS.length - 2,
       // title: 'title',
-      //message: 'I am description, description, description',
+      // message: 'I am description, description, description',
       maskClosable: true,
       'data-seed': 'logId',
-      //wrapProps,
+      // wrapProps,
     },
-      (index) => {
-        if (index === 0) Actions.replace(SCENE_UPDATE_DIARY, { diary: this.props.diary })
-        if (index === 1) {
-          Alert.alert(
-            '',
-            '确定要删除这篇日记吗？',
-            [
-              {
-                text: '取消',
-                onPress: () => { }
-              },
-              {
-                text: '确定',
-                onPress: async () => {
-                  // 更新配置文件
-                  await updateFile({
-                    user_id: this.props.user.id || 0,
-                    action: this.props.diary.id ? 'update' : 'delete',
-                    data: {
-                      ...this.props.diary,
-                      op: 3
-                    }
-                  })
+    (index) => {
+      if (index === 0) Actions.replace(SCENE_UPDATE_DIARY, { diary: this.props.diary })
+      if (index === 1) {
+        Alert.alert(
+          '',
+          '确定要删除这篇日记吗？',
+          [
+            {
+              text: '取消',
+              onPress: () => { }
+            },
+            {
+              text: '确定',
+              onPress: async () => {
+                // 更新配置文件
+                await updateFile({
+                  user_id: this.props.user.id || 0,
+                  action: this.props.diary.id ? 'update' : 'delete',
+                  data: {
+                    ...this.props.diary,
+                    op: 3
+                  }
+                })
 
-                  !!this.props.user.id && syncFile(this.props.user.id)
+                !!this.props.user.id && syncFile(this.props.user.id)
 
-                  Actions.pop()
-                }
-              },
-            ]
-          )
-        }
-        if (index === 3) return
-      });
+                Actions.pop()
+              }
+            },
+          ]
+        )
+      }
+      if (index === 3) return
+    })
   }
 
   async likeNote() {
@@ -280,7 +302,7 @@ export default class DiaryDetail extends Component {
     this.setState({ hideCommentInput: true })
   }
 
-  getComment  = async () => {
+  getComment = async () => {
     const params = {
       note_id: this.props.diary.id,
       owner_id: this.props.diary.user_id
@@ -322,7 +344,7 @@ export default class DiaryDetail extends Component {
   }
 
   _renderLeftButton() {
-    let source = this.state.imgPathList.length ?
+    let source = this.props.diary.images ?
       require('../../../res/images/common/icon_back_white.png') :
       require('../../../res/images/common/icon_back_black.png')
 
@@ -341,7 +363,6 @@ export default class DiaryDetail extends Component {
       let source = this.state.imgPathList.length ?
         require('../../../res/images/common/icon_more_white.png') :
         require('../../../res/images/common/icon_more_black.png')
-
       const rightButton = (
         <TouchableOpacity
           style={styles.nav_right}
@@ -360,7 +381,40 @@ export default class DiaryDetail extends Component {
     }
   }
 
+  
+  _renderHoleRightButton() {
+    const { diary } = this.props
+    let source = diary.images ?
+      require('../../../res/images/common/icon_more_white.png') :
+      require('../../../res/images/common/icon_more_black.png')
+    const rightButton = (
+      <TouchableOpacity
+        style={styles.nav_right}
+        onPress={() => {
+          if (Platform.OS === 'android') {
+            this.showActionSheet()
+          } else {
+            this.showHoleOptions()
+          }
+        }}
+      >
+        <Image source={source} />
+      </TouchableOpacity>
+    )
+    this.setState({ rightButton })
+  }
+
   render() {
+    const { from } = this.props
+    let name = '匿名'
+    let code = '0000'
+    let face = 'https://airing.ursb.me/image/twolife/male.png'
+    if (from === 'hole') {
+      const { diary } = this.props
+      name = diary.user.emotions_type && diary.user.emotions_type || '匿名'
+      code = diary.user.code.toString().substr(diary.user.code.toString().length - 4, 4)
+      face = !diary.user.sex && 'https://airing.ursb.me/image/twolife/male.png' || 'https://airing.ursb.me/image/twolife/female.png'
+    }
     return (
       <Container
         style={styles.container}
@@ -395,14 +449,19 @@ export default class DiaryDetail extends Component {
 
           <TextPingFang style={styles.text_title}>{this.props.diary.title}</TextPingFang>
 
-          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'flex' : 'none' }]}>
+          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id && from === 'home' ? 'flex' : 'none' }]}>
             <Image style={styles.partner_face} source={{ uri: this.props.partner.face }} />
             <TextPingFang style={styles.text_name}>{this.props.partner.name}</TextPingFang>
           </View>
 
-          <View style={[styles.partner_container, { display: this.props.diary.user_id !== this.props.user.id ? 'none' : 'flex' }]}>
+          <View style={[styles.partner_container, { display: this.props.diary.user_id == this.props.user.id && from === 'home' ? 'flex' : 'none' }]}>
             <Image style={styles.partner_face} source={{ uri: this.props.user.face }} />
             <TextPingFang style={styles.text_name}>{this.props.user.name}</TextPingFang>
+          </View>
+
+          <View style={[styles.partner_container, { display: from === 'hole' ? 'flex' : 'none' }]}>
+            <Image style={styles.partner_face} source={{ uri: face }} />
+            <TextPingFang style={styles.text_name}>{name + ' ' + code}</TextPingFang>
           </View>
 
           <View style={styles.line} />
@@ -411,7 +470,7 @@ export default class DiaryDetail extends Component {
 
           <View style={styles.location_container}>
             <Image style={styles.location_icon} source={require('../../../res/images/home/icon_location.png')} />
-            <TextPingFang style={styles.text_location}>{this.props.diary.location}</TextPingFang>
+            <TextPingFang style={styles.text_location}>{from === 'home' ? this.props.diary.location : '地球上的某个角落'}</TextPingFang>
           </View>
 
           <View style={styles.mode_container}>
@@ -466,7 +525,7 @@ export default class DiaryDetail extends Component {
           </View>
 
           <TouchableOpacity
-            style={[styles.mode_container, {display: this.props.diary.user_id === this.props.user.user_other_id ? 'flex' : 'none'}]}
+            style={[styles.mode_container]}
             activeOpacity={1}
             onPress={this.keyboardWillShow}
           >
@@ -501,7 +560,7 @@ export default class DiaryDetail extends Component {
         </Modal>
 
         <TouchableOpacity
-          style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'flex' : 'none', position: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'absolute' : 'relative' }]}
+          style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id && this.props.partner.id && from === 'home' ? 'flex' : 'none', position: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'absolute' : 'relative' }]}
         >
           {this.state.likeComponent}
         </TouchableOpacity>
@@ -651,8 +710,8 @@ const styles = StyleSheet.create({
     ...ifIphoneX({
       bottom: 48
     }, {
-        bottom: 24
-      })
+      bottom: 24
+    })
   },
   img_btn: {
     width: getResponsiveWidth(64),
