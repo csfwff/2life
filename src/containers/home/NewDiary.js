@@ -410,6 +410,18 @@ export default class NewDiary extends Component {
                   }
                   }
                 />
+                <TouchableOpacity
+                  style={styles.date_right_ctn}
+                  onPress={() => this.setState({ isPushToHole: !this.state.isPushToHole })}
+                  activeOpacity={1}
+                >
+                  <TextPingFang style={styles.text_date_right}>同时发布到树洞板块</TextPingFang>
+                  {
+                    this.state.isPushToHole ?
+                    <Image source={require('../../../res/images/home/diary/icon_active.png')}/> :
+                    <Image source={require('../../../res/images/home/diary/icon_inactive.png')}/>
+                  }
+                </TouchableOpacity>
               </View>
           }
 

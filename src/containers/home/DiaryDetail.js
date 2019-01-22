@@ -187,6 +187,24 @@ export default class DiaryDetail extends Component {
     })
   }
 
+  showHoleOptionsAndroid(){
+    const BUTTONS = ['举报该不适当内容','取消']
+    ActionSheet.showActionSheetWithOptions({
+      options: BUTTONS,
+      cancelButtonIndex: BUTTONS.length - 1,
+      maskClosable: true,
+      'data-seed': 'logId',
+    },
+    (index)=>{
+      if (index === 0) {
+        HttpUtils.get(NOTES.report_hole, { note_id: this.props.diary.id })
+        Toast.info('将会对内容进行核查，感谢您的反馈', 1.5)
+      }
+      if (index === 1) return
+    })
+  }
+
+
   showActionSheet() {
     const BUTTONS = ['修改日记', '删除日记', '取消']
     ActionSheet.showActionSheetWithOptions({
@@ -392,7 +410,7 @@ export default class DiaryDetail extends Component {
         style={styles.nav_right}
         onPress={() => {
           if (Platform.OS === 'android') {
-            this.showActionSheet()
+            this.showHoleOptionsAndroid()
           } else {
             this.showHoleOptions()
           }
@@ -478,7 +496,9 @@ export default class DiaryDetail extends Component {
             <TextPingFang style={styles.text_mode}>{this.state.mode}</TextPingFang>
             <TextPingFang style={styles.text_value}>情绪值</TextPingFang>
             <TouchableOpacity
-              style={[styles.update_container, { display: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'flex' : 'none', position: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'absolute' : 'relative' }]}
+              style={[styles.update_container, {
+                display: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'flex' : 'none',
+                position: this.props.user.id === this.props.diary.user_id || this.props.diary.user_id === 0 ? 'absolute' : 'relative' }]}
               onPress={() => this.toggleChooseMode()}
             >
               <TextPingFang style={styles.text_update}>更正</TextPingFang>
@@ -560,7 +580,9 @@ export default class DiaryDetail extends Component {
         </Modal>
 
         <TouchableOpacity
-          style={[styles.btn_container, { display: this.props.user.id !== this.props.diary.user_id && this.props.partner.id && from === 'home' ? 'flex' : 'none', position: this.props.user.id !== this.props.diary.user_id && this.props.partner.id ? 'absolute' : 'relative' }]}
+          style={[styles.btn_container, {
+            display: this.props.user.id !== this.props.diary.user_id && this.props.partner.id && from === 'home' ? 'flex' : 'none',
+             position: this.props.user.id !== this.props.diary.user_id && this.props.partner.id && from === 'home'? 'absolute' : 'relative' }]}
         >
           {this.state.likeComponent}
         </TouchableOpacity>
@@ -573,12 +595,14 @@ export default class DiaryDetail extends Component {
           <TextInput
             ref={ref => this.inputComment = ref}
             style={styles.input_comment}
+            onBlur={()=>this.setState({hideCommentInput: true})}
             value={this.state.commentContent}
             onChangeText={text => this.setState({ commentContent_2: text, commentContent : text})}
             placeholder={this.state.inputCommentPlaceholder}
             placeholderTextColor='#aaa'
             enablesReturnKeyAutomatically={true}
             multiline={true}
+            blurOnSubmit={true}
             underlineColorAndroid='transparent'
             returnKeyType={'send'}
             onSubmitEditing={() => {

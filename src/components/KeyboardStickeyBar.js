@@ -28,13 +28,13 @@ export default class KeyboardStickeyBar extends Component {
   }
 
   componentDidMount () {
-    if (Platform.OS === 'android') {
-      this.keyboardWillShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardWillShow)
-      this.keyboardWillHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardWillHide)
-    } else {
+    //if (Platform.OS === 'android') {
+    //  this.keyboardWillShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardWillShow)
+    //  this.keyboardWillHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardWillHide)
+  //} else {
       this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow)
       this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide)
-    }
+    //}
   }
 
   componentWillUnmount () {
@@ -69,7 +69,8 @@ export default class KeyboardStickeyBar extends Component {
           ctnStyle,
           {
             display: hide ? 'none' : 'flex',
-            bottom: this.state.offsetBottom
+            bottom: this.state.offsetBottom,
+            position: hide ? 'relative' : 'absolute'
           }
       ]}>
         {children}

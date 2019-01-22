@@ -7,6 +7,7 @@ import {
   Image,
   View,
   ScrollView,
+  Platform,
   Modal,
   DeviceEventEmitter
 } from 'react-native'
@@ -437,7 +438,9 @@ export default class ProfileMode extends Component {
         <View style={styles.banner}>
           <TextPingFang style={styles.title}>情绪报告</TextPingFang>
           <TouchableOpacity
-            style={[styles.share, { display: this.props.user.emotions_basis && this.state.isWXAppInstalled ? 'flex' : 'none' }]}
+            style={[styles.share, {
+              display: this.props.user.emotions_basis && this.state.isWXAppInstalled && Platform.OS === 'ios' ? 'flex' : 'none',
+              position: this.props.user.emotions_basis && this.state.isWXAppInstalled && Platform.OS === 'ios' ? 'absolute' : 'relative'}]}
             onPress={() => this._toggleShare()}
           >
             <Image source={shareIcon}/>

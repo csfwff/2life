@@ -125,6 +125,7 @@
     <orderEntry type="library" name="Gradle: com.android.support:support-core-utils-27.1.1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: org.webkit:android-jsc-r174650" level="project" />
+    <orderEntry type="library" name="Gradle: com.facebook.fresco:animated-gif-1.3.0" level="project" />
     <orderEntry type="library" name="Gradle: javax.inject:javax.inject:1@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.facebook.soloader:soloader-0.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-fragment-27.1.1" level="project" />
@@ -142,6 +143,7 @@
     <orderEntry type="library" name="Gradle: com.facebook.fresco:imagepipeline-1.3.0" level="project" />
     <orderEntry type="library" name="Gradle: com.koushikdutta.async:androidasync:2.1.6@jar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:E.\git\2life\node_modules\react-native-wechat\android\libs\libammsdk.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.facebook.fresco:animated-base-1.3.0" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:runtime-1.1.0" level="project" />
     <orderEntry type="module" module-name="react-native-touch-id" />
     <orderEntry type="module" module-name="react-native-linear-gradient" />
