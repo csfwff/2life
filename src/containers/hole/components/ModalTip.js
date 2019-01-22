@@ -79,7 +79,7 @@ export default class ModalTip extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.startAnimation(nextProps.show)
-  }    
+  }
 
   startAnimation = (show) => {
     Animated.parallel([
@@ -109,7 +109,7 @@ export default class ModalTip extends Component {
 
   render() {
     return (
-      <View style={[styles.ctn, { display: this.props.show ? 'flex' : 'none' }]}>
+      <View style={[styles.ctn, { display: this.props.show ? 'flex' : 'none', position: this.props.show ? 'absolute':'relative'}]}>
         <Animated.View
           style={[styles.inner_ctn, {
             width: this.state.modalWidth,
@@ -123,7 +123,7 @@ export default class ModalTip extends Component {
             renderItem={this.renderItem}
             ListHeaderComponent={this.renderHeader}
           />
-          
+
           <TouchableOpacity style={styles.btn_ctn} activeOpacity={1} onPress={this.props.onPressOk}>
             <Text style={styles.text_btn}>{this.props.textOk}</Text>
           </TouchableOpacity>

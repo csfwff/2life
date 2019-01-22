@@ -78,7 +78,7 @@ export default class DiaryDetail extends Component {
         this._renderLeftButton()
         this._renderRightButton()
       })
-    } 
+    }
 
     if (from === 'hole') {
       this.setState({
@@ -381,7 +381,7 @@ export default class DiaryDetail extends Component {
     }
   }
 
-  
+
   _renderHoleRightButton() {
     const { diary } = this.props
     let source = diary.images ?
@@ -574,7 +574,7 @@ export default class DiaryDetail extends Component {
             ref={ref => this.inputComment = ref}
             style={styles.input_comment}
             value={this.state.commentContent}
-            onChangeText={text => this.setState({ commentContent_2: text })}
+            onChangeText={text => this.setState({ commentContent_2: text, commentContent : text})}
             placeholder={this.state.inputCommentPlaceholder}
             placeholderTextColor='#aaa'
             enablesReturnKeyAutomatically={true}

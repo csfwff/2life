@@ -73,22 +73,9 @@ public class MainApplication extends Application implements ReactApplication {
             new ImagePickerPackage(),
             new RNIapPackage(),
             new RNFSPackage(),
-            new JPushPackage(!BuildConfig.DEBUG, !BuildConfig.DEBUG),
-            new SvgPackage(),
-            new RNFSPackage(),
-            new RNViewShotPackage(),
-            new FingerprintAuthPackage(),
-            new LinearGradientPackage(),
+            new JPushPackage(!BuildConfig.DEBUG, !BuildConfig.DEBUG)
             //new ExtraDimensionsPackage(),
-                    new RandomBytesPackage(),
-                    new RNFetchBlobPackage(),
-                    new VectorIconsPackage(),
-                    new SvgPackage(),
-                    new SplashScreenReactPackage(),
-                    new ImagePickerPackage(),
-                    new RNIapPackage(),
-                    new WeChatPackage(),
-                    new JPushPackage(true, true));
+                 );
         }
     };
 
