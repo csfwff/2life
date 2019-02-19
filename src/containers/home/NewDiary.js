@@ -391,7 +391,7 @@ export default class NewDiary extends Component {
                   customStyles={{
                     dateIcon: {
                       position: 'absolute',
-                      right: getResponsiveWidth(100),
+                      left: getResponsiveWidth(90),
                       top: 10,
                       bottom: 10,
                       marginLeft: 0,
@@ -410,6 +410,8 @@ export default class NewDiary extends Component {
                   }
                   }
                 />
+
+
                 <TouchableOpacity
                   style={styles.date_right_ctn}
                   onPress={() => this.setState({ isPushToHole: !this.state.isPushToHole })}
