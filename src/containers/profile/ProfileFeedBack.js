@@ -55,6 +55,7 @@ export default class ProfileFeedBack extends Component {
     const deviceId = DeviceInfo.getDeviceId() // 设备型号
     const systemVersion = DeviceInfo.getSystemVersion() // 系统版本
 
+
     const data = {
       title: this.state.content.slice(0, 15),
       content: this.state.content,

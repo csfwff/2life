@@ -3287,6 +3287,12 @@ inquirer@^3.0.6:
     strip-ansi "^4.0.0"
     through "^2.3.6"
 
+invariant@2.2.0:
+  version "2.2.0"
+  resolved "http://registry.npm.taobao.org/invariant/download/invariant-2.2.0.tgz#c8d7e847366a49cc18b622f058a689d481e895f2"
+  dependencies:
+    loose-envify "^1.0.0"
+
 invariant@^2.0.0, invariant@^2.2.0, invariant@^2.2.1, invariant@^2.2.2:
   version "2.2.4"
   resolved "http://registry.npm.taobao.org/invariant/download/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
@@ -3984,6 +3990,10 @@ jsx-ast-utils@^2.0.1:
   dependencies:
     array-includes "^3.0.3"
 
+keymirror@0.1.1:
+  version "0.1.1"
+  resolved "http://registry.npm.taobao.org/keymirror/download/keymirror-0.1.1.tgz#918889ea13f8d0a42e7c557250eee713adc95c35"
+
 kind-of@^1.1.0:
   version "1.1.0"
   resolved "http://registry.npm.taobao.org/kind-of/download/kind-of-1.1.0.tgz#140a3d2d41a36d2efcfa9377b62c24f8495a5c44"
@@ -4197,7 +4207,7 @@ lodash@^3.5.0:
   version "3.10.1"
   resolved "http://registry.npm.taobao.org/lodash/download/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.16.6, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.6.1:
+lodash@^4.0.0, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.16.6, lodash@^4.17.10, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.6.1:
   version "4.17.10"
   resolved "http://registry.npm.taobao.org/lodash/download/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
@@ -5095,7 +5105,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@15.x, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0:
+prop-types@15.x, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.1:
   version "15.6.1"
   resolved "http://registry.npm.taobao.org/prop-types/download/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
   dependencies:
@@ -5383,6 +5393,14 @@ react-native-animatable@^1.2.4:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-calendar-heatmap@^0.1.2:
+  version "0.1.2"
+  resolved "http://registry.npm.taobao.org/react-native-calendar-heatmap/download/react-native-calendar-heatmap-0.1.2.tgz#0580fe2ede826f758dcae49879645c2d69803672"
+  dependencies:
+    lodash "^4.17.10"
+    prop-types "^15.6.1"
+    react-native-svg "^6.3.1"
+
 react-native-calendars@^1.19.3:
   version "1.19.3"
   resolved "http://registry.npm.taobao.org/react-native-calendars/download/react-native-calendars-1.19.3.tgz#4a9a6ec9d695b9f5f6003d80fe6c0930453e89eb"
@@ -5427,6 +5445,10 @@ react-native-datepicker@^1.7.2:
   resolved "http://registry.npm.taobao.org/react-native-datepicker/download/react-native-datepicker-1.7.2.tgz#58d0822591a0ac9b32aba082650222a0ee29669d"
   dependencies:
     moment "^2.22.0"
+
+react-native-device-info@^0.28.0:
+  version "0.28.1"
+  resolved "http://registry.npm.taobao.org/react-native-device-info/download/react-native-device-info-0.28.1.tgz#d182d2ddbcfc40223e38c784d75ce6032aa9cc38"
 
 react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"
@@ -5487,6 +5509,10 @@ react-native-keyboard-aware-scroll-view@^0.5.0:
   dependencies:
     prop-types "^15.6.0"
     react-native-iphone-x-helper "^1.0.1"
+
+react-native-keyboard-spacer@^0.4.1:
+  version "0.4.1"
+  resolved "http://registry.npm.taobao.org/react-native-keyboard-spacer/download/react-native-keyboard-spacer-0.4.1.tgz#46f18a320432098a25ea9fa89f5143dd254d332d"
 
 react-native-level-fs@^3.0.1:
   version "3.0.1"
@@ -5652,11 +5678,33 @@ react-native-view-shot@^2.5.0:
   version "2.5.0"
   resolved "http://registry.npm.taobao.org/react-native-view-shot/download/react-native-view-shot-2.5.0.tgz#428a997f470d3148d0067c5b46abd988ef1aa4c0"
 
+react-native-webview-bridge-updated@^1.0.0:
+  version "1.1.1"
+  resolved "http://registry.npm.taobao.org/react-native-webview-bridge-updated/download/react-native-webview-bridge-updated-1.1.1.tgz#f7110263f1cb279af544b495ac57012128c13145"
+  dependencies:
+    invariant "2.2.0"
+    keymirror "0.1.1"
+
+react-native-webview-bridge@^0.40.1:
+  version "0.40.1"
+  resolved "http://registry.npm.taobao.org/react-native-webview-bridge/download/react-native-webview-bridge-0.40.1.tgz#8a64a108c5687101e1da86e87fd707350a3f89fa"
+  dependencies:
+    create-react-class "^15.6.0"
+    invariant "^2.2.2"
+    keymirror "0.1.1"
+    prop-types "^15.5.10"
+
 react-native-wechat@^1.9.9:
   version "1.9.9"
   resolved "http://registry.npm.taobao.org/react-native-wechat/download/react-native-wechat-1.9.9.tgz#acc4f7f22a3aeae13671108bcee39cbcb023c23a"
   dependencies:
     events "1.0.2"
+
+react-native-zss-rich-text-editor@^1.1.0:
+  version "1.1.0"
+  resolved "http://registry.npm.taobao.org/react-native-zss-rich-text-editor/download/react-native-zss-rich-text-editor-1.1.0.tgz#c197d797a8ca65e46e2ccbe36e73fa2624d07c1c"
+  dependencies:
+    react-native-webview-bridge-updated "^1.0.0"
 
 react-native@^0.54.0:
   version "0.54.4"
