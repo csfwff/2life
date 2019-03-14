@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react'
 import {
   View,
@@ -47,6 +48,8 @@ import Storage from '../../common/storage'
 import HttpUtils from '../../network/HttpUtils'
 import { UTILS, USERS } from '../../network/Urls'
 
+import { VERSION_NUMBER } from '../../constants/config'
+
 function mapStateToProps(state) {
   return {
     user: state.user,
@@ -54,7 +57,7 @@ function mapStateToProps(state) {
 }
 
 @connect(mapStateToProps)
-export default class NewDiary extends Component {
+export default class NewDiary1 extends Component {
 
   state = {
     date: new Date(),
@@ -172,7 +175,8 @@ export default class NewDiary extends Component {
           user_id: this.props.user.id || 0,
           status: this.props.user.status || null,
           hole_alive: this.state.isPushToHole ? Date.now() + 48 * 3600000 : -1,
-          op: 1
+          op: 1,
+          v: VERSION_NUMBER
         }
       })
 
@@ -373,8 +377,8 @@ export default class NewDiary extends Component {
                   <TextPingFang style={styles.text_date_right}>同时发布到树洞板块</TextPingFang>
                   {
                     this.state.isPushToHole ?
-                    <Image source={require('../../../res/images/home/diary/icon_active.png')}/> :
-                    <Image source={require('../../../res/images/home/diary/icon_inactive.png')}/>
+                      <Image source={require('../../../res/images/home/diary/icon_active.png')}/> :
+                      <Image source={require('../../../res/images/home/diary/icon_inactive.png')}/>
                   }
                 </TouchableOpacity>
               </View>

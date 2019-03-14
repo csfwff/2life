@@ -34,6 +34,7 @@ class SplashScreen extends Component {
     this._requestPermissions()
   }
 
+  // TODO: 自动登录逻辑可优化，不必每次请求验证。
   async _autoLogin() {
     const key = await Storage.get('key', {})
     if (!key.uid || !key.token || !key.timestamp) {
