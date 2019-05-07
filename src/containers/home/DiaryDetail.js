@@ -447,7 +447,8 @@ export default class DiaryDetail extends Component {
             rightButton={this.state.rightButton}
             onTouchStart={() => this.setState({ touchStartTs: Date.now() })}
             onTouchEnd={() => {
-              if (Date.now() - this.state.touchStartTs < 80) {
+            //  alert(Date.now() - this.state.touchStartTs)
+              if (Date.now() - this.state.touchStartTs < 200) {
                 this.setState({ showImgPreview: true })
               }
             }}
